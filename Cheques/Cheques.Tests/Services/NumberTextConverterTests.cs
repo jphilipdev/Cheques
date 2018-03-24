@@ -99,7 +99,7 @@ namespace Cheques.Tests
         [TestCase(1000100.01, "one million, one hundred dollars and one cent")]
         [TestCase(1000110.00, "one million, one hundred and ten dollars")]
         [TestCase(1000110.01, "one million, one hundred and ten dollars and one cent")]
-        [TestCase(1100000.00, "one million, one hundred and ten thousand dollars")]
+        [TestCase(1110000.00, "one million, one hundred and ten thousand dollars")]
         [TestCase(1110000.01, "one million, one hundred and ten thousand dollars and one cent")]
         [TestCase(1110100.00, "one million, one hundred and ten thousand, one hundred dollars")]
         [TestCase(1110100.01, "one million, one hundred and ten thousand, one hundred dollars and one cent")]

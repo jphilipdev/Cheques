@@ -160,7 +160,7 @@ namespace Cheques.Services
                     var hundredsDigit = System.Convert.ToInt32(digitsString[0].ToString());
                     sb.Append($"{_digitConversions[hundredsDigit]} hundred");
 
-                    if (unitsDigit == 0)
+                    if (tensDigit == 0 && unitsDigit == 0)
                     {
                         return sb.ToString();
                     }
