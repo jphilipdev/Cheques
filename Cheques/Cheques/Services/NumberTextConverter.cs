@@ -13,48 +13,74 @@ namespace Cheques.Services
             var wholeNumber = Math.Floor(number);
             var decimals = (number - wholeNumber) * 100;
 
-            var wholeNumberText = string.Join(", ", BuildWholeNumberText(wholeNumber));
-            var decimalsText = new DigitGroup(System.Convert.ToInt32(decimals), "cent").ToString();
+            var pluralisedCurrencyName = wholeNumber == 1 ? "dollar" : "dollars";
 
             if (wholeNumber > 0 && decimals > 0)
             {
-                return $"{wholeNumberText} and {decimalsText}";
+                return $"{GetWholeNumberText(wholeNumber)} {pluralisedCurrencyName} and {GetDecimalsText(decimals)}";
             }
 
             if (wholeNumber > 0)
             {
-                return wholeNumberText;
+                return $"{GetWholeNumberText(wholeNumber)} {pluralisedCurrencyName}";
             }
 
-            return decimalsText;
+            return GetDecimalsText(decimals);
+        }
+
+        private string GetWholeNumberText(decimal wholeNumber)
+        {
+            return string.Join(", ", BuildWholeNumberText(wholeNumber));
+        }
+
+        private string GetDecimalsText(decimal decimals)
+        {
+            var cents = new DigitGroup(System.Convert.ToInt32(decimals), "cent").ToString();
+            return decimals == 1 ? cents : $"{cents}s";
         }
 
         private IEnumerable<string> BuildWholeNumberText(decimal wholeNumber)
         {
             if (wholeNumber > 0)
             {
-                var digitGroups = new Dictionary<string, int>();
+                var wholeNumberGroups = wholeNumber.ToString("#,#").Split(",").ToList();
+                wholeNumberGroups.Reverse();
 
-                digitGroups["dollar"] = 0;
-                digitGroups["thousand"] = 3;
-                digitGroups["million"] = 6;
-                digitGroups["billion"] = 9;
-                digitGroups["trillion"] = 12;
+                var groupNames = new[] { "", "thousand", "million", "billion", "trillion", "quadrillion", "quintillion", "sextillion", "septillion", "octillion" };
 
-                foreach (var kvp in digitGroups)
+                var digitGroups = wholeNumberGroups.Zip(groupNames, (wholeNumberGroup, groupName) => new Tuple<string, string>(wholeNumberGroup, groupName)).ToList();
+
+                digitGroups.Reverse();
+
+                foreach(var digitGroup in digitGroups)
                 {
-                    var text = ConvertGroup(wholeNumber, kvp.Value, 3, kvp.Key);
-                    if (!string.IsNullOrEmpty(text))
+                    if (System.Convert.ToInt32(digitGroup.Item1) != 0)
                     {
-                        yield return text;
+                        var text = ConvertGroup(digitGroup.Item1, digitGroup.Item2);
+                        if (!string.IsNullOrEmpty(text))
+                        {
+                            yield return text;
+                        }
                     }
                 }
             }
         }
 
+        private string ConvertGroup(string digitsString, string digitGroupName)
+        {
+            if (string.IsNullOrEmpty(digitsString))
+            {
+                return null;
+            }
+
+            var digitGroup = new DigitGroup(System.Convert.ToInt32(digitsString), digitGroupName);
+            return digitGroup.ToString();
+        }
+
+
         private string ConvertGroup(decimal number, int skip, int take, string digitGroupName)
         {
-            var digitsString = new string(number.ToString().Skip(skip).Take(take).ToArray());
+            var digitsString = new string(number.ToString().Reverse().Skip(skip).Take(take).ToArray());
             if (string.IsNullOrEmpty(digitsString))
             {
                 return null;
@@ -68,7 +94,6 @@ namespace Cheques.Services
         {
             private readonly Dictionary<int, string> _digitConversions = new Dictionary<int, string>()
             {
-                [0] = "zero",
                 [1] = "one",
                 [2] = "two",
                 [3] = "three",
@@ -108,9 +133,12 @@ namespace Cheques.Services
             public string DigitGroupName { get; }
 
             public override string ToString()
-            {
-                var pluralisedDigitGroupName = Digits == 1 ? DigitGroupName : $"{DigitGroupName}s";
-                return $"{ConvertDigits(Digits)} {pluralisedDigitGroupName}";
+            {   
+                if(string.IsNullOrEmpty(DigitGroupName))
+                {
+                    return ConvertDigits(Digits);
+                }
+                return $"{ConvertDigits(Digits)} {DigitGroupName}";
             }
 
             private string ConvertDigits(int digits)
@@ -159,30 +187,6 @@ namespace Cheques.Services
 
                 return $"{_digitConversions[tensDigit]} {_digitConversions[unitsDigit]}";
             }
-
-            //private string Convert3DigitNumber(string digitsString)
-            //{
-
-            //    var tensDigit = System.Convert.ToInt32(digitsString[1].ToString()) * 10;
-            //    var unitsDigit = System.Convert.ToInt32(digitsString[2].ToString());
-
-            //    var sb = new StringBuilder();
-            //    sb.Append($"{_digitConversions[hundredsDigit]} hundred");
-
-            //    if (unitsDigit > 0)
-            //    {
-            //        if (_digitConversions.ContainsKey(tensDigit))
-            //        {
-            //            sb.Append($" and {_digitConversions[tensDigit]}");
-            //        }
-            //        else
-            //        {
-            //            sb.Append($"and {_digitConversions[tensDigit]} {_digitConversions[unitsDigit]}");
-            //        }
-            //    }
-
-            //    return sb.ToString();
-            //}
         }
     }
 }
