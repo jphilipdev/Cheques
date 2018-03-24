@@ -1,1 +1,5 @@
 /Cheques/.vs/Cheques/v15/Server/sqlite3/db.lock
+/Cheques/Cheques.Tests/bin/*
+/Cheques/Cheques.Tests/obj/*
+/Cheques/.vs/*
+/Cheques/.vs/*
