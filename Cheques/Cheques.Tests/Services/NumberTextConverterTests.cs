@@ -49,62 +49,62 @@ namespace Cheques.Tests
 
         // 1 digit dollars
         [TestCase(1.00, "one dollar")]
-        [TestCase(1.01, "one dollar and 1 cent")]
+        [TestCase(1.01, "one dollar and one cent")]
         [TestCase(2.00, "two dollars")]
 
         //2 digit dollars
         [TestCase(10.00, "ten dollars")]
-        [TestCase(10.01, "ten dollars and 1 cent")]
+        [TestCase(10.01, "ten dollars and one cent")]
 
         // 3 digit dollars
         [TestCase(100.00, "one hundred dollars")]
-        [TestCase(100.01, "one hundred dollars and 1 cent")]
+        [TestCase(100.01, "one hundred dollars and one cent")]
         [TestCase(101.00, "one hundred and one dollars")]
-        [TestCase(100.01, "one hundred and one dollars and 1 cent")]
+        [TestCase(100.01, "one hundred and one dollars and one cent")]
 
         // 4 digit dollars
         [TestCase(1000.00, "one thousand dollars")]
-        [TestCase(1000.01, "one thousand dollars and 1 cent")]
+        [TestCase(1000.01, "one thousand dollars and one cent")]
         [TestCase(1100.00, "one thousand, one hundred dollars")]
-        [TestCase(1100.01, "one thousand, one hundred dollars and 1 cent")]
+        [TestCase(1100.01, "one thousand, one hundred dollars and one cent")]
         [TestCase(1110.00, "one thousand, one hundred and ten dollars")]
-        [TestCase(1110.01, "one thousand, one hundred and ten dollars and 1 cent")]
+        [TestCase(1110.01, "one thousand, one hundred and ten dollars and one cent")]
 
         // 5 digit dollars
         [TestCase(10000.00, "ten thousand dollars")]
-        [TestCase(10000.01, "ten thousand dollars and 1 cent")]
+        [TestCase(10000.01, "ten thousand dollars and one cent")]
         [TestCase(10100.00, "ten thousand, one hundred dollars")]
-        [TestCase(10100.01, "ten thousand, one hundred dollars and 1 cent")]
+        [TestCase(10100.01, "ten thousand, one hundred dollars and one cent")]
         [TestCase(10110.00, "ten thousand, one hundred and ten dollars")]
-        [TestCase(10110.01, "ten thousand, one hundred and ten dollars and 1 cent")]
+        [TestCase(10110.01, "ten thousand, one hundred and ten dollars and one cent")]
 
         // 6 digit dollars
         [TestCase(100000.00, "one hundred thousand dollars")]
-        [TestCase(100000.01, "one hundred thousand dollars and 1 cent")]
+        [TestCase(100000.01, "one hundred thousand dollars and one cent")]
         [TestCase(100100.00, "one hundred thousand, one hundred dollars")]
-        [TestCase(100100.01, "one hundred thousand, one hundred dollars and 1 cent")]
+        [TestCase(100100.01, "one hundred thousand, one hundred dollars and one cent")]
         [TestCase(100110.00, "one hundred thousand, one hundred and ten dollars")]
-        [TestCase(100110.01, "one hundred thousand, one hundred and ten dollars and 1 cent")]
+        [TestCase(100110.01, "one hundred thousand, one hundred and ten dollars and one cent")]
         [TestCase(110000.00, "one hundred and ten thousand dollars")]
-        [TestCase(110000.01, "one hundred and ten thousand dollars and 1 cent")]
+        [TestCase(110000.01, "one hundred and ten thousand dollars and one cent")]
         [TestCase(110100.00, "one hundred and ten thousand, one hundred dollars")]
-        [TestCase(110100.01, "one hundred and ten thousand, one hundred dollars and 1 cent")]
+        [TestCase(110100.01, "one hundred and ten thousand, one hundred dollars and one cent")]
         [TestCase(110110.00, "one hundred and ten thousand, one hundred and ten dollars")]
-        [TestCase(110110.01, "one hundred and ten thousand, one hundred and ten dollars and 1 cent")]
+        [TestCase(110110.01, "one hundred and ten thousand, one hundred and ten dollars and one cent")]
 
         // 7 digit dollars
         [TestCase(1000000.00, "one million dollars")]
-        [TestCase(1000000.01, "one million dollars and 1 cent")]
+        [TestCase(1000000.01, "one million dollars and one cent")]
         [TestCase(1000100.00, "one million, one hundred dollars")]
-        [TestCase(1000100.01, "one million, one hundred dollars and 1 cent")]
+        [TestCase(1000100.01, "one million, one hundred dollars and one cent")]
         [TestCase(1000110.00, "one million, one hundred and ten dollars")]
-        [TestCase(1000110.01, "one million, one hundred and ten dollars and 1 cent")]
+        [TestCase(1000110.01, "one million, one hundred and ten dollars and one cent")]
         [TestCase(1100000.00, "one million, one hundred and ten thousand dollars")]
-        [TestCase(1110000.01, "one million, one hundred and ten thousand dollars and 1 cent")]
+        [TestCase(1110000.01, "one million, one hundred and ten thousand dollars and one cent")]
         [TestCase(1110100.00, "one million, one hundred and ten thousand, one hundred dollars")]
-        [TestCase(1110100.01, "one million, one hundred and ten thousand, one hundred dollars and 1 cent")]
+        [TestCase(1110100.01, "one million, one hundred and ten thousand, one hundred dollars and one cent")]
         [TestCase(1110110.00, "one million, one hundred and ten thousand, one hundred and ten dollars")]
-        [TestCase(1110110.01, "one million, one hundred and ten thousand, one hundred and ten dollars and 1 cent")]
+        [TestCase(1110110.01, "one million, one hundred and ten thousand, one hundred and ten dollars and one cent")]
         public void GivenNumberInValidRange_WhenConverted_ThenNumberConvertedToText(decimal number, string expectedText)
         {
             // ARRANGE

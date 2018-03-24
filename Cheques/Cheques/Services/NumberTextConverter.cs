@@ -12,8 +12,54 @@ namespace Cheques.Services
             var wholeNumber = Math.Floor(number);
             var decimals = (number - wholeNumber) * 100;
 
-            var digitGroup = new DigitGroup(System.Convert.ToInt32(decimals), "cent");
+            var wholeNumberText = string.Join(", ", BuildWholeNumberText(wholeNumber));
+            var decimalsText = new DigitGroup(System.Convert.ToInt32(decimals), "cent").ToString();
 
+            if (wholeNumber > 0 && decimals > 0)
+            {
+                return $"{wholeNumberText} and {decimalsText}";
+            }
+
+            if (wholeNumber > 0)
+            {
+                return wholeNumberText;
+            }
+
+            return decimalsText;
+        }
+
+        private IEnumerable<string> BuildWholeNumberText(decimal wholeNumber)
+        {
+            if (wholeNumber > 0)
+            {
+                var digitGroups = new Dictionary<string, int>();
+
+                digitGroups["dollar"] = 0;
+                digitGroups["thousand"] = 3;
+                digitGroups["million"] = 6;
+                digitGroups["billion"] = 9;
+                digitGroups["trillion"] = 12;
+
+                foreach (var kvp in digitGroups)
+                {
+                    var text = ConvertGroup(wholeNumber, kvp.Value, 3, kvp.Key);
+                    if (!string.IsNullOrEmpty(text))
+                    {
+                        yield return text;
+                    }
+                }
+            }
+        }
+
+        private string ConvertGroup(decimal number, int skip, int take, string digitGroupName)
+        {
+            var digitsString = new string(number.ToString().Skip(skip).Take(take).ToArray());
+            if (string.IsNullOrEmpty(digitsString))
+            {
+                return null;
+            }
+
+            var digitGroup = new DigitGroup(System.Convert.ToInt32(digitsString), digitGroupName);
             return digitGroup.ToString();
         }
 
@@ -51,7 +97,7 @@ namespace Cheques.Services
                 [90] = "ninety",
             };
 
-            public DigitGroup(int digits, string digitGroupName = null)
+            public DigitGroup(int digits, string digitGroupName)
             {
                 Digits = digits;
                 DigitGroupName = digitGroupName;
@@ -62,49 +108,43 @@ namespace Cheques.Services
 
             public override string ToString()
             {
-                var namedDigits = $"{ConvertDigits(Digits)} {DigitGroupName}";
-                if (Digits == 1)
-                {
-                    return namedDigits;
-                }
-
-                return $"{namedDigits}s";
+                var pluralisedDigitGroupName = Digits == 1 ? DigitGroupName : $"{DigitGroupName}s";
+                return $"{ConvertDigits(Digits)} {pluralisedDigitGroupName}";
             }
 
             private string ConvertDigits(int digits)
             {
-                // handle simple conversions
                 if (_digitConversions.ContainsKey(Digits))
                 {
                     return _digitConversions[Digits];
                 }
 
                 var digitsString = digits.ToString();
-                if(digitsString.Length == 2)
+                if (digitsString.Length == 2)
                 {
                     return Convert2DigitNumber(digitsString);
                 }
-                else if(digitsString.Length == 3)
+                else if (digitsString.Length == 3)
                 {
                     return Convert3DigitNumber(digitsString);
                 }
 
                 throw new NotSupportedException($"Cannot converts digits '{digits}'");
-            }            
+            }
 
             private string Convert2DigitNumber(string digitsString)
             {
-                var tensDigit = System.Convert.ToInt32(digitsString.Substring(0,1)) * 10;
-                var unitsDigit = System.Convert.ToInt32(digitsString.Substring(1));
+                var tensDigit = System.Convert.ToInt32(digitsString[0].ToString()) * 10;
+                var unitsDigit = System.Convert.ToInt32(digitsString[1].ToString());
 
                 return $"{_digitConversions[tensDigit]} {_digitConversions[unitsDigit]}";
             }
 
             private string Convert3DigitNumber(string digitsString)
             {
-                var hundredsDigit = System.Convert.ToInt32(digitsString.Substring(0, 1)) * 100;
-                var tensDigit = System.Convert.ToInt32(digitsString.Substring(1, 1)) * 10;
-                var unitsDigit = System.Convert.ToInt32(digitsString.Substring(2));
+                var hundredsDigit = System.Convert.ToInt32(digitsString[0].ToString()) * 100;
+                var tensDigit = System.Convert.ToInt32(digitsString[1].ToString()) * 10;
+                var unitsDigit = System.Convert.ToInt32(digitsString[2].ToString());
 
                 return $"{_digitConversions[hundredsDigit]} hundred {_digitConversions[tensDigit]} {_digitConversions[unitsDigit]}";
             }
