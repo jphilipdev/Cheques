@@ -90,6 +90,20 @@ namespace Cheques.Tests
         [TestCase(110100.01, "one hundred and ten thousand, one hundred dollars and 1 cent")]
         [TestCase(110110.00, "one hundred and ten thousand, one hundred and ten dollars")]
         [TestCase(110110.01, "one hundred and ten thousand, one hundred and ten dollars and 1 cent")]
+
+        // 7 digit dollars
+        [TestCase(1000000.00, "one million dollars")]
+        [TestCase(1000000.01, "one million dollars and 1 cent")]
+        [TestCase(1000100.00, "one million, one hundred dollars")]
+        [TestCase(1000100.01, "one million, one hundred dollars and 1 cent")]
+        [TestCase(1000110.00, "one million, one hundred and ten dollars")]
+        [TestCase(1000110.01, "one million, one hundred and ten dollars and 1 cent")]
+        [TestCase(1100000.00, "one million, one hundred and ten thousand dollars")]
+        [TestCase(1110000.01, "one million, one hundred and ten thousand dollars and 1 cent")]
+        [TestCase(1110100.00, "one million, one hundred and ten thousand, one hundred dollars")]
+        [TestCase(1110100.01, "one million, one hundred and ten thousand, one hundred dollars and 1 cent")]
+        [TestCase(1110110.00, "one million, one hundred and ten thousand, one hundred and ten dollars")]
+        [TestCase(1110110.01, "one million, one hundred and ten thousand, one hundred and ten dollars and 1 cent")]
         public void GivenNumberInValidRange_WhenConverted_ThenNumberConvertedToText(decimal number, string expectedText)
         {
             // ARRANGE
