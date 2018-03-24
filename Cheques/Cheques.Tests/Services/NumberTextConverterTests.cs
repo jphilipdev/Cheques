@@ -115,5 +115,18 @@ namespace Cheques.Tests
             // ASSERT
             Assert.AreEqual(expectedText, result);
         }
+
+        [Test]
+        public void GivenNumberIsDecimalMaxValue_WhenConverted_ThenNumberConvertedToText()
+        {
+            // ARRANGE
+            var number = decimal.MaxValue;
+
+            // ACT
+            var result = _subject.Convert(number);
+
+            // ASSERT
+            Assert.AreEqual("seventy nine octillion, two hundred and twenty eight septillion, one hundred and sixty two sextillion, five hundred and fourteen quintillion, two hundred and sixty four quadrillion, three hundred and thirty seven trillion, five hundred and ninety three billion, five hundred and forty three million, nine hundred and fifty thousand, three hundred and thirty five dollars", result);
+        }
     }
 }
