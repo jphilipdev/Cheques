@@ -60,7 +60,7 @@ namespace Cheques.Tests
         [TestCase(100.00, "one hundred dollars")]
         [TestCase(100.01, "one hundred dollars and one cent")]
         [TestCase(101.00, "one hundred and one dollars")]
-        [TestCase(100.01, "one hundred and one dollars and one cent")]
+        [TestCase(101.01, "one hundred and one dollars and one cent")]
 
         // 4 digit dollars
         [TestCase(1000.00, "one thousand dollars")]

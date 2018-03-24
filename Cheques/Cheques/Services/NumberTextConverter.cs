@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Cheques.Services
 {
@@ -119,17 +120,36 @@ namespace Cheques.Services
                     return _digitConversions[Digits];
                 }
 
+                var sb = new StringBuilder();
+
                 var digitsString = digits.ToString();
-                if (digitsString.Length == 2)
+
+                var tensDigit = System.Convert.ToInt32(digitsString[digitsString.Length-2].ToString()) * 10;
+                var unitsDigit = System.Convert.ToInt32(digitsString[digitsString.Length-1].ToString());
+
+                if (digitsString.Length == 3)
                 {
-                    return Convert2DigitNumber(digitsString);
-                }
-                else if (digitsString.Length == 3)
-                {
-                    return Convert3DigitNumber(digitsString);
+                    var hundredsDigit = System.Convert.ToInt32(digitsString[0].ToString());
+                    sb.Append($"{_digitConversions[hundredsDigit]} hundred");
+
+                    if (unitsDigit == 0)
+                    {
+                        return sb.ToString();
+                    }
+
+                    sb.Append(" and ");
                 }
 
-                throw new NotSupportedException($"Cannot converts digits '{digits}'");
+                if (_digitConversions.ContainsKey(tensDigit + unitsDigit))
+                {
+                    sb.Append(_digitConversions[tensDigit + unitsDigit]);
+                }
+                else
+                {
+                    sb.Append($"{_digitConversions[tensDigit]} {_digitConversions[unitsDigit]}");
+                }
+
+                return sb.ToString();
             }
 
             private string Convert2DigitNumber(string digitsString)
@@ -140,14 +160,29 @@ namespace Cheques.Services
                 return $"{_digitConversions[tensDigit]} {_digitConversions[unitsDigit]}";
             }
 
-            private string Convert3DigitNumber(string digitsString)
-            {
-                var hundredsDigit = System.Convert.ToInt32(digitsString[0].ToString()) * 100;
-                var tensDigit = System.Convert.ToInt32(digitsString[1].ToString()) * 10;
-                var unitsDigit = System.Convert.ToInt32(digitsString[2].ToString());
+            //private string Convert3DigitNumber(string digitsString)
+            //{
 
-                return $"{_digitConversions[hundredsDigit]} hundred {_digitConversions[tensDigit]} {_digitConversions[unitsDigit]}";
-            }
+            //    var tensDigit = System.Convert.ToInt32(digitsString[1].ToString()) * 10;
+            //    var unitsDigit = System.Convert.ToInt32(digitsString[2].ToString());
+
+            //    var sb = new StringBuilder();
+            //    sb.Append($"{_digitConversions[hundredsDigit]} hundred");
+
+            //    if (unitsDigit > 0)
+            //    {
+            //        if (_digitConversions.ContainsKey(tensDigit))
+            //        {
+            //            sb.Append($" and {_digitConversions[tensDigit]}");
+            //        }
+            //        else
+            //        {
+            //            sb.Append($"and {_digitConversions[tensDigit]} {_digitConversions[unitsDigit]}");
+            //        }
+            //    }
+
+            //    return sb.ToString();
+            //}
         }
     }
 }
