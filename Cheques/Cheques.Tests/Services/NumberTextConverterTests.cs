@@ -107,12 +107,12 @@ namespace Cheques.Tests
         public void GivenNumberInValidRange_WhenConverted_ThenNumberConvertedToText(decimal number, string expectedText)
         {
             // ARRANGE
-
+            
             // ACT
             var result = _subject.Convert(number);
 
             // ASSERT
-            Assert.AreEqual(number, expectedText);
+            Assert.AreEqual(expectedText, result);
         }
     }
 }
