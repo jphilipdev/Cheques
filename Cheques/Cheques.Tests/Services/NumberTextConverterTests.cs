@@ -45,6 +45,7 @@ namespace Cheques.Tests
         [TestCase(0.70, "seventy cents")]
         [TestCase(0.80, "eighty cents")]
         [TestCase(0.90, "ninety cents")]
+        [TestCase(0.99, "ninety nine cents")]
 
         // 1 digit dollars
         [TestCase(1.00, "one dollar")]

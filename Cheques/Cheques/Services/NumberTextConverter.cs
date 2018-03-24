@@ -1,7 +1,7 @@
 ﻿using Cheques.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace Cheques.Services
 {
@@ -62,25 +62,51 @@ namespace Cheques.Services
 
             public override string ToString()
             {
-                var sb = new StringBuilder();
-
-                if(_digitConversions.ContainsKey(Digits))
+                var namedDigits = $"{ConvertDigits(Digits)} {DigitGroupName}";
+                if (Digits == 1)
                 {
-                    if (DigitGroupName == null)
-                    {
-                        return _digitConversions[Digits];
-                    }
-
-                    var namedDigits = $"{_digitConversions[Digits]} {DigitGroupName}";
-                    if(Digits == 1)
-                    {
-                        return namedDigits;
-                    }
-
-                    return $"{namedDigits}s";
+                    return namedDigits;
                 }
 
-                return sb.ToString();
+                return $"{namedDigits}s";
+            }
+
+            private string ConvertDigits(int digits)
+            {
+                // handle simple conversions
+                if (_digitConversions.ContainsKey(Digits))
+                {
+                    return _digitConversions[Digits];
+                }
+
+                var digitsString = digits.ToString();
+                if(digitsString.Length == 2)
+                {
+                    return Convert2DigitNumber(digitsString);
+                }
+                else if(digitsString.Length == 3)
+                {
+                    return Convert3DigitNumber(digitsString);
+                }
+
+                throw new NotSupportedException($"Cannot converts digits '{digits}'");
+            }            
+
+            private string Convert2DigitNumber(string digitsString)
+            {
+                var tensDigit = System.Convert.ToInt32(digitsString.Substring(0,1)) * 10;
+                var unitsDigit = System.Convert.ToInt32(digitsString.Substring(1));
+
+                return $"{_digitConversions[tensDigit]} {_digitConversions[unitsDigit]}";
+            }
+
+            private string Convert3DigitNumber(string digitsString)
+            {
+                var hundredsDigit = System.Convert.ToInt32(digitsString.Substring(0, 1)) * 100;
+                var tensDigit = System.Convert.ToInt32(digitsString.Substring(1, 1)) * 10;
+                var unitsDigit = System.Convert.ToInt32(digitsString.Substring(2));
+
+                return $"{_digitConversions[hundredsDigit]} hundred {_digitConversions[tensDigit]} {_digitConversions[unitsDigit]}";
             }
         }
     }
