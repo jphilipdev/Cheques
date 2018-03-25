@@ -13,6 +13,17 @@ namespace Cheques.Services
             var wholeNumber = Math.Floor(number);
             var decimals = (number - wholeNumber) * 100;
 
+            var text = Convert(wholeNumber, decimals);
+            return ToTitleCase(text);
+        }
+
+        private string ToTitleCase(string text)
+        {
+            return text.First().ToString().ToUpper() + text.Substring(1);
+        }
+
+        private string Convert(decimal wholeNumber, decimal decimals)
+        {
             var pluralisedCurrencyName = wholeNumber == 1 ? "dollar" : "dollars";
 
             if (wholeNumber > 0 && decimals > 0)
