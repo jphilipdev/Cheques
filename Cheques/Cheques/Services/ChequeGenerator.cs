@@ -19,7 +19,7 @@ namespace Cheques.Services
             ValidateCheque(amount);
 
             var amountInWords = _numberTextConverter.Convert(amount);
-            return new Cheque(name, amount, amountInWords, date);
+            return new Cheque(name, amount, amountInWords, date.ToShortDateString());
         }
 
         private static void ValidateCheque(decimal amount)
@@ -32,6 +32,11 @@ namespace Cheques.Services
             if (amount == 0)
             {
                 throw new ZeroChequeAmountRequestedException();
+            }
+
+            if(amount != Math.Round(amount, 2))
+            {
+                throw new TooManyDecimalsRequestedException(amount);
             }
         }
     }

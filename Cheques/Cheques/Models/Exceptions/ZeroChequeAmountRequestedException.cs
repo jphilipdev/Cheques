@@ -7,5 +7,5 @@ namespace Cheques.Models.Exceptions
         public ZeroChequeAmountRequestedException()
         {
         }
-            }
+    }
 }

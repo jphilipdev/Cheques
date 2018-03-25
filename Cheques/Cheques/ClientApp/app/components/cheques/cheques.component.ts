@@ -7,18 +7,26 @@ import { Http } from '@angular/http';
     styleUrls: ['./cheques.component.css']
 })
 export class ChequesComponent {
-    public forecasts: WeatherForecast[];
+    public name: string;
+    public amount: number;
+    public date: Date;
+    public cheque: Cheque;
 
-    constructor(http: Http, @Inject('BASE_URL') baseUrl: string) {
-        http.get(baseUrl + 'api/SampleData/WeatherForecasts').subscribe(result => {
-            this.forecasts = result.json() as WeatherForecast[];
-        }, error => console.error(error));
+    constructor(private http: Http, @Inject('BASE_URL') private baseUrl: string) {        
+    }
+
+    public generateCheque() {
+        var url = 'api/cheques/generate?name=' + this.name + '&amount=' + this.amount + '&date=' + this.date;
+
+        this.http.get(this.baseUrl + url).subscribe(result => {
+            this.cheque = result.json() as Cheque;
+        }, error => console.error(error));        
     }
 }
 
-interface WeatherForecast {
-    dateFormatted: string;
-    temperatureC: number;
-    temperatureF: number;
-    summary: string;
+interface Cheque {
+    name: string;
+    amount: number;
+    amountInWords: string;
+    formattedDate: string;
 }

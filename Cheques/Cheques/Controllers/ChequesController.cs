@@ -15,7 +15,8 @@ namespace Cheques.Controllers
             _chequeGenerator = chequeGenerator;
         }
 
-        public IActionResult Get(string name, decimal amount, DateTime date)
+        [HttpGet, Route("[action]")]
+        public IActionResult Generate(string name, decimal amount, DateTime date)
         {
             try
             {
@@ -28,7 +29,11 @@ namespace Cheques.Controllers
             }
             catch (ZeroChequeAmountRequestedException)
             {
-                return BadRequest($"Cannot generate cheque for zero amount");
+                return BadRequest("Cannot generate cheque for zero amount");
+            }
+            catch (TooManyDecimalsRequestedException e)
+            {
+                return BadRequest($"Cannot generate cheque with as many decimal places as amount: '{e.Amount}'");
             }
         }
     }
