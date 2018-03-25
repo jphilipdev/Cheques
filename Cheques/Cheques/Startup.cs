@@ -1,7 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Cheques.Services;
+using Cheques.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
@@ -23,6 +21,9 @@ namespace Cheques
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            services.AddTransient<INumberTextConverter, NumberTextConverter>();
+            services.AddTransient<IChequeGenerator, ChequeGenerator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
