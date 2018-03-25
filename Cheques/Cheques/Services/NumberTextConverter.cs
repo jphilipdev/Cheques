@@ -15,12 +15,7 @@ namespace Cheques.Services
 
             var text = Convert(wholeNumber, decimals);
             return ToTitleCase(text);
-        }
-
-        private string ToTitleCase(string text)
-        {
-            return text.First().ToString().ToUpper() + text.Substring(1);
-        }
+        }        
 
         private string Convert(decimal wholeNumber, decimal decimals)
         {
@@ -54,20 +49,23 @@ namespace Cheques.Services
         {
             if (wholeNumber > 0)
             {
+                // convert 1234 to ["432", "1"]
                 var wholeNumberGroups = wholeNumber.ToString("#,#").Split(",").ToList();
                 wholeNumberGroups.Reverse();
 
+                // convert to [{ Item1: "432", Item2: "", { Item1: "1", Item2: "thousand" }]
                 var groupNames = new[] { "", "thousand", "million", "billion", "trillion", "quadrillion", "quintillion", "sextillion", "septillion", "octillion" };
-
                 var digitGroups = wholeNumberGroups.Zip(groupNames, (wholeNumberGroup, groupName) => new Tuple<string, string>(wholeNumberGroup, groupName)).ToList();
 
+                // put back into the order the digit groups should be written
                 digitGroups.Reverse();
 
                 foreach(var digitGroup in digitGroups)
                 {
+                    // discard any digit groups that should not be written to avoid e.g. "zero thousand"
                     if (System.Convert.ToInt32(digitGroup.Item1) != 0)
                     {
-                        var text = ConvertGroup(digitGroup.Item1, digitGroup.Item2);
+                        var text = new DigitGroup(System.Convert.ToInt32(digitGroup.Item1), digitGroup.Item2).ToString();
                         if (!string.IsNullOrEmpty(text))
                         {
                             yield return text;
@@ -77,28 +75,9 @@ namespace Cheques.Services
             }
         }
 
-        private string ConvertGroup(string digitsString, string digitGroupName)
+        private string ToTitleCase(string text)
         {
-            if (string.IsNullOrEmpty(digitsString))
-            {
-                return null;
-            }
-
-            var digitGroup = new DigitGroup(System.Convert.ToInt32(digitsString), digitGroupName);
-            return digitGroup.ToString();
-        }
-
-
-        private string ConvertGroup(decimal number, int skip, int take, string digitGroupName)
-        {
-            var digitsString = new string(number.ToString().Reverse().Skip(skip).Take(take).ToArray());
-            if (string.IsNullOrEmpty(digitsString))
-            {
-                return null;
-            }
-
-            var digitGroup = new DigitGroup(System.Convert.ToInt32(digitsString), digitGroupName);
-            return digitGroup.ToString();
+            return text.First().ToString().ToUpper() + text.Substring(1);
         }
 
         private class DigitGroup
@@ -163,11 +142,13 @@ namespace Cheques.Services
 
                 var digitsString = digits.ToString();
 
+                // convert e.g. 2 to 20 so it can be looked up in _digitConversions
                 var tensDigit = System.Convert.ToInt32(digitsString[digitsString.Length-2].ToString()) * 10;
                 var unitsDigit = System.Convert.ToInt32(digitsString[digitsString.Length-1].ToString());
 
                 if (digitsString.Length == 3)
                 {
+                    // if there is 3 digits in a group the leading digit is always "n hundred"
                     var hundredsDigit = System.Convert.ToInt32(digitsString[0].ToString());
                     sb.Append($"{_digitConversions[hundredsDigit]} hundred");
 
@@ -181,22 +162,16 @@ namespace Cheques.Services
 
                 if (_digitConversions.ContainsKey(tensDigit + unitsDigit))
                 {
+                    // convert e.g. the "12" from "112" 
                     sb.Append(_digitConversions[tensDigit + unitsDigit]);
                 }
                 else
                 {
+                    // convert e.g. the "21" from "121" 
                     sb.Append($"{_digitConversions[tensDigit]} {_digitConversions[unitsDigit]}");
                 }
 
                 return sb.ToString();
-            }
-
-            private string Convert2DigitNumber(string digitsString)
-            {
-                var tensDigit = System.Convert.ToInt32(digitsString[0].ToString()) * 10;
-                var unitsDigit = System.Convert.ToInt32(digitsString[1].ToString());
-
-                return $"{_digitConversions[tensDigit]} {_digitConversions[unitsDigit]}";
             }
         }
     }
