@@ -55,7 +55,7 @@ namespace Cheques.Services
 
                 // convert to [{ Item1: "432", Item2: "", { Item1: "1", Item2: "thousand" }]
                 var groupNames = new[] { "", "thousand", "million", "billion", "trillion", "quadrillion", "quintillion", "sextillion", "septillion", "octillion" };
-                var digitGroups = wholeNumberGroups.Zip(groupNames, (wholeNumberGroup, groupName) => new Tuple<string, string>(wholeNumberGroup, groupName)).ToList();
+                var digitGroups = wholeNumberGroups.Zip(groupNames, (WholeNumberGroup, GroupName) => (WholeNumberGroup, GroupName)).ToList();
 
                 // put back into the order the digit groups should be written
                 digitGroups.Reverse();
@@ -65,7 +65,7 @@ namespace Cheques.Services
                     // discard any digit groups that should not be written to avoid e.g. "zero thousand"
                     if (System.Convert.ToInt32(digitGroup.Item1) != 0)
                     {
-                        var text = new DigitGroup(System.Convert.ToInt32(digitGroup.Item1), digitGroup.Item2).ToString();
+                        var text = new DigitGroup(System.Convert.ToInt32(digitGroup.WholeNumberGroup), digitGroup.GroupName).ToString();
                         if (!string.IsNullOrEmpty(text))
                         {
                             yield return text;
