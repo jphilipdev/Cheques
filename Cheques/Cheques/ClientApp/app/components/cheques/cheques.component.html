@@ -28,4 +28,21 @@
             </div>
         </div>
     </form>
+
+
+    <div class="cheque">
+        <div class="row">
+            <div class="col-sm-offset-6 col-sm-1 cheque-date-label">DATE</div>
+            <div class="col-sm-2 cheque-date">{{cheque.formattedDate}}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-1 cheque-pay-label">PAY</div>
+            <div class="col-sm-4 cheque-pay">{{cheque.name}}</div>
+            <div class="col-sm-1 cheque-amount-label">$</div>
+            <div class="col-sm-3 cheque-amount">{{cheque.amount}}</div>
+        </div>
+        <div class="row">
+            <div class="cheque-amount-in-words">{{cheque.amountInWords}}</div>
+        </div>
+    </div>
 </div>
